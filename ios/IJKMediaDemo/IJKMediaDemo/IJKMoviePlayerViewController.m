@@ -22,6 +22,61 @@
 
 @implementation IJKVideoViewController
 
++ (IJKFFOptions *)optionsWithLowLatency
+{
+    IJKFFOptions *options = [IJKFFOptions optionsByDefault];
+    
+    // Player options - reduce buffering for low latency
+    [options setPlayerOptionIntValue:1      forKey:@"packet-buffering"];
+    [options setPlayerOptionIntValue:1      forKey:@"framedrop"];
+    [options setPlayerOptionIntValue:1      forKey:@"sync-av-start"]; // Enable A/V sync to fix audio ahead issue
+    
+    // Optimized buffer watermarks for 2.2 Mbps stream (275 KB/s)
+    // Target: 200-800ms latency for stable 2.2 Mbps stream
+    [options setPlayerOptionIntValue:100    forKey:@"first-high-water-mark-ms"];
+    [options setPlayerOptionIntValue:300    forKey:@"next-high-water-mark-ms"];
+    [options setPlayerOptionIntValue:800    forKey:@"last-high-water-mark-ms"];
+    
+    // Buffer size optimized for 2.2 Mbps stream
+    // min-frames: ~1 GOP (30 frames) for GOP of 29 frames
+    [options setPlayerOptionIntValue:30     forKey:@"min-frames"];
+    [options setPlayerOptionIntValue:2*1024*1024 forKey:@"max-buffer-size"]; // 2MB for 2.2 Mbps stream
+    
+    // RTMP specific options for live streaming
+    [options setFormatOptionIntValue:1      forKey:@"rtmp_live"];
+    [options setFormatOptionIntValue:0      forKey:@"rtmp_buffer"];
+    [options setFormatOptionIntValue:8192   forKey:@"rtmp_buffer_size"]; // 8KB for 2.2 Mbps
+    
+    // Performance optimizations for 30 FPS stream
+    [options setCodecOptionIntValue:1       forKey:@"skip_loop_filter"];
+    [options setPlayerOptionIntValue:3      forKey:@"video-pictq-size"]; // Increased to 3 for better A/V sync
+    [options setPlayerOptionIntValue:30     forKey:@"max-fps"]; // Match source FPS exactly
+    
+    // A/V Synchronization fixes
+    [options setPlayerOptionIntValue:0      forKey:@"start-on-prepared"]; // Wait for both A/V streams
+    [options setPlayerOptionIntValue:10     forKey:@"max-deviation"]; // Allow 10ms A/V sync deviation
+    [options setPlayerOptionIntValue:1      forKey:@"sync-type"]; // Use audio clock as master
+    
+    // Network optimizations for 2.2 Mbps RTMPS
+    [options setFormatOptionIntValue:1      forKey:@"reconnect"];
+    [options setFormatOptionIntValue:3      forKey:@"reconnect_streamed"]; // Faster reconnect for live
+    [options setFormatOptionIntValue:15*1000*1000 forKey:@"timeout"]; // 15s timeout for high bitrate
+    [options setFormatOptionIntValue:1      forKey:@"tcp_nodelay"];
+    [options setFormatOptionValue:@"1048576" forKey:@"recv_buffer_size"]; // 1MB receive buffer
+    
+    // GOP-aware optimizations (29 frames GOP / 0.9667 seconds)
+    [options setPlayerOptionIntValue:0      forKey:@"enable-accurate-seek"];
+    [options setPlayerOptionIntValue:1      forKey:@"videotoolbox"]; // Hardware decode for 2.2 Mbps
+    [options setPlayerOptionIntValue:1      forKey:@"videotoolbox-async"]; // Async decode for performance
+    [options setPlayerOptionIntValue:0      forKey:@"videotoolbox-wait-async"];
+    
+    // Audio optimizations for 130.6 kbit/s audio with better sync
+    [options setPlayerOptionIntValue:512*1024 forKey:@"audio-buffer-size"]; // 512KB audio buffer
+    [options setPlayerOptionIntValue:0      forKey:@"audio-disable-mixing"]; // Ensure clean audio sync
+    
+    return options;
+}
+
 - (void)dealloc
 {
 }
@@ -82,7 +137,7 @@
     [IJKFFMoviePlayerController checkIfFFmpegVersionMatch:YES];
     // [IJKFFMoviePlayerController checkIfPlayerVersionMatch:YES major:1 minor:0 micro:0];
 
-    IJKFFOptions *options = [IJKFFOptions optionsByDefault];
+    IJKFFOptions *options = [IJKVideoViewController optionsWithLowLatency];
 
     if (self.manifest != nil){
         [options setPlayerOptionValue:@"ijklas"         forKey:@"iformat"];

@@ -40,4 +40,6 @@ build/
 xcuserdata
 xcshareddata
 *.xccheckout
+ios/IJKMediaPlayer/DerivedData/
+ios/IJKMediaDemo/DerivedData/
 
