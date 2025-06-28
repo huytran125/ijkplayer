@@ -32,17 +32,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"M3U8";
+    self.title = @"Low-Latency Streams";
 
     NSMutableArray *sampleList = [[NSMutableArray alloc] init];
 
-    [sampleList addObject:@[@"las url",
-    @"{\"version\":\"1.0.0\",\"adaptationSet\":[{\"duration\":1000,\"id\":1,\"representation\":[{\"id\":1,\"codec\":\"avc1.64001e,mp4a.40.5\",\"url\":\"http://las-tech.org.cn/kwai/las-test_ld500d.flv\",\"backupUrl\":[],\"host\":\"las-tech.org.cn\",\"maxBitrate\":700,\"width\":640,\"height\":360,\"frameRate\":25,\"qualityType\":\"SMOOTH\",\"qualityTypeName\":\"流畅\",\"hidden\":false,\"disabledFromAdaptive\":false,\"defaultSelected\":false},{\"id\":2,\"codec\":\"avc1.64001f,mp4a.40.5\",\"url\":\"http://las-tech.org.cn/kwai/las-test_sd1000d.flv\",\"backupUrl\":[],\"host\":\"las-tech.org.cn\",\"maxBitrate\":1300,\"width\":960,\"height\":540,\"frameRate\":25,\"qualityType\":\"STANDARD\",\"qualityTypeName\":\"标清\",\"hidden\":false,\"disabledFromAdaptive\":false,\"defaultSelected\":true},{\"id\":3,\"codec\":\"avc1.64001f,mp4a.40.5\",\"url\":\"http://las-tech.org.cn/kwai/las-test.flv\",\"backupUrl\":[],\"host\":\"las-tech.org.cn\",\"maxBitrate\":2300,\"width\":1280,\"height\":720,\"frameRate\":30,\"qualityType\":\"HIGH\",\"qualityTypeName\":\"高清\",\"hidden\":false,\"disabledFromAdaptive\":false,\"defaultSelected\":false}]}]}"]];
-    [sampleList addObject:@[@"bipbop basic master playlist",
+    // RTMPS Live Streaming Examples (Low Latency Optimized)
+    [sampleList addObject:@[@"🔴 RTMPS Live Stream (Cloudflare)",
+                            @"rtmps://live.cloudflare.com:443/live/0ebe28391ee0890a96796a4db676d629kae8bbea2fe797e12ac27d07008681049"]];
+    [sampleList addObject:@[@"🔴 RTMP Live Test Stream",
+                            @"rtmp://live.twitch.tv/live/test_stream_key"]];
+    
+    // Original M3U8 Examples
+    [sampleList addObject:@[@"M3U8: bipbop basic master playlist",
                             @"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8"]];
-    [sampleList addObject:@[@"bipbop basic 400x300 @ 232 kbps",
+    [sampleList addObject:@[@"M3U8: bipbop basic 400x300 @ 232 kbps",
                             @"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8"]];
-    [sampleList addObject:@[@"bipbop basic 640x480 @ 650 kbps",
+    [sampleList addObject:@[@"M3U8: bipbop basic 640x480 @ 650 kbps",
                             @"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear2/prog_index.m3u8"]];
     [sampleList addObject:@[@"bipbop basic 640x480 @ 1 Mbps",
                             @"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear3/prog_index.m3u8"]];
