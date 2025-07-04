@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-native-fbsdk-next": "^13.4.1"
+  }
+}

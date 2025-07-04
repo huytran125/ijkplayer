@@ -10,6 +10,8 @@ extra
 ijkmedia/ijkyuv/
 ijkmedia/ijksoundtouch
 ijkprof/android-ndk-profiler/
+ios/IJKMediaDemo/DerivedData/
+TestIJKDemo/DerivedData/
 
 # built application files
 *.apk
